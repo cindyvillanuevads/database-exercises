@@ -40,7 +40,8 @@ WHERE sales < 20;
 SELECT name FROM albums
 WHERE genre ='Rock';
 
--- Why do these query results not include albums with a genre of "Hard rock" or "Progressive rock"? because when we  use genre = Rock, it will display only the fields that have exact genre as Rock. whe can use LIKE to include albums with the word Rock in genre 
+-- Why do these query results not include albums with a genre of "Hard rock" or "Progressive rock"? because when we  use genre = Rock, it will display only 
+-- the fields that have exact genre as Rock. whe can use LIKE to include albums with the word Rock in genre 
 SELECT name, genre FROM albums
 WHERE genre LIKE '%Rock%';
 
