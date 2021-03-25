@@ -12,7 +12,7 @@ WHERE first_name IN ('Irena', 'Vidya', 'Maya');
 
 /*
 3. Find all current or previous employees with first names 'Irena', 'Vidya', or 'Maya', as in Q2, but use OR instead of IN. 
-Enter a comment with the number of records returned. Does it match number of rows from Q2? yes, 709 records
+Enter a comment with the number of records returned. Does it match number of rows from Q2? yes, (709 records)
 */
 
 SELECT * 
@@ -62,8 +62,8 @@ FROM employees
 WHERE last_name LIKE "%E" 
 	AND last_name NOT LIKE "E%";
 
-/*7. Find all current or previous employees employees whose last name starts and ends with 'E'. 
-Enter a comment with the number of employees whose last name starts and ends with E. 809 RECORDS
+/*7. Find all current or previous employees  whose last name starts and ends with 'E'. 
+Enter a comment with the number of employees whose last name starts and ends with E. 899 RECORDS
 How many employees' last names end with E, regardless of whether they start with E? 24292 records
 */
 
