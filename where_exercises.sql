@@ -71,6 +71,10 @@ SELECT last_name
 FROM employees
 WHERE last_name LIKE 'E%'
 	AND last_name LIKE '%E';
+-- OTHER WAY TO DO FISRT question	
+SELECT *
+FROM employees
+WHERE last_name LIKE 'E%E';
 
 SELECT last_name
 FROM employees
