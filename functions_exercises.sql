@@ -4,7 +4,7 @@
 2.Write a query to to find all employees whose last name starts and ends with 'E'.
 Use concat() to combine their first and last name together as a single column named full_name.
 */
-SELECT CONCAT(first_name, ' ', last_name)
+SELECT CONCAT(first_name, ' ', last_name) AS Full_name
 FROM  employees;
 
 /*
@@ -21,10 +21,10 @@ FROM  employees;
 (Hint: You will also need to use NOW() or CURDATE()),
 
 */
-SELECT first_name, last_name, DATEDIFF(NOW(), hire_date)
-FROM employees;
+SELECT first_name, last_name, DATEDIFF(NOW(), hire_date) AS Days_working_at_Company
+FROM employees
 WHERE birth_date LIKE '%-12-25' 
-	AND hire_date LIKE '199%'
+	AND hire_date LIKE '199%';
 /*
 5.Find the smallest and largest current salary from the salaries table.
 */
@@ -62,5 +62,6 @@ Use your knowledge of built in SQL functions to generate a username for all of t
 
 SELECT LOWER(
 CONCAT(
-(SUBSTR(first_name, 1, 1)), SUBSTR(last_name, 1, 4),'_',SUBSTR(birth_date, 1, 4), SUBSTR(birth_date, 6, 2), SUBSTR(birth_date, 3, 2)))
+(SUBSTR(first_name, 1, 1)), SUBSTR(last_name, 1, 4),'_', SUBSTR(birth_date, 6, 2), SUBSTR(birth_date, 3, 2))),
+first_name, last_name, birth_date
 FROM employees;
