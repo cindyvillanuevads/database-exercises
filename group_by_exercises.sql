@@ -92,7 +92,7 @@ COUNT(*) AS No_Emp
 FROM employees
 GROUP BY Username;
 
--- yes, there are duplicates  usernames
+-- yes, there are duplicate usernames.
 
 ---The following shows all the duplicate usernames. Total 13,251
 SELECT 
