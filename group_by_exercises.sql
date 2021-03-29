@@ -7,6 +7,8 @@
 SELECT DISTINCT	(title)
 FROM titles;
 -- 7 titles --
+
+
 /*
 3. Write a query to to find a list of all unique last names of all employees that start and end with 'E' using GROUP BY.
 */
@@ -24,8 +26,11 @@ GROUP BY last_name;
 SELECT  first_name, last_name
 FROM employees
 WHERE last_name LIKE 'e%e'
-GROUP BY first_name, last_name; 
+GROUP BY  last_name, first_name;  
 -- 846 records--
+
+
+
 /*
 5. Write a query to find the unique last names with a 'q' but not 'qu'. 
 Include those names in a comment in your sql code.
@@ -49,18 +54,31 @@ WHERE last_name LIKE '%q%'
 AND last_name NOT LIKE '%qu%'
 GROUP BY last_name, FIRST_name;
 
+-- OTHER WAY THAT SHOWS FIRST T
 
+SELECT last_name,first_name,  COUNT(last_name) AS No_empl
+FROM employees
+WHERE last_name LIKE '%q%'
+AND last_name NOT LIKE '%qu%'
+GROUP BY last_name, FIRST_name
+ORDER BY No_empl DESC;
 /*
 7. Find all all employees with first names 'Irena', 'Vidya', or 'Maya'. Use COUNT(*) and 
 GROUP BY to find the number of employees for each gender with those names.
 */
-SELECT gender, COUNT(first_name) 
+SELECT gender,first_name, COUNT(first_name) 
 FROM employees
 WHERE first_name IN ('Irena', 'Vidya', 'Maya') 
-GROUP BY gender;
+GROUP BY gender, first_name;
 
--- M	441
--- F	268
+/*
+M	Irena	144
+M	Maya	146
+M	Vidya	151
+F	Irena	97
+F	Maya	90
+F	Vidya	81
+*/
 
 /*
 8. Using your query that generates a username for all of the employees, generate a count employees for each unique username.
@@ -74,12 +92,9 @@ COUNT(*) AS No_Emp
 FROM employees
 GROUP BY Username;
 
--- yes, there are duplicates 
---  total usernames = 300,024
---- unique usernames= 285,872
---14 152
+-- yes, there are duplicates  usernames
 
---Here I order by No_emp with the same username
+---The following shows all the duplicate usernames. Total 13,251
 SELECT 
  LOWER(
 CONCAT(
@@ -87,4 +102,7 @@ CONCAT(
 COUNT(*) AS No_Emp
 FROM employees
 GROUP BY Username
+HAVING No_Emp > 1
 ORDER BY No_emp DESC;
+
+
