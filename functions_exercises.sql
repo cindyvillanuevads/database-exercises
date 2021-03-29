@@ -5,15 +5,16 @@
 Use concat() to combine their first and last name together as a single column named full_name.
 */
 SELECT CONCAT(first_name, ' ', last_name) AS Full_name
-FROM  employees;
+FROM  employees
+WHERE last_name LIKE 'E%E';
 
 /*
 3.
 Convert the names produced in your last query to all uppercase.
 */
-SELECT UPPER (CONCAT(first_name, ' ', last_name))
-FROM  employees;
-
+SELECT UPPER (CONCAT(first_name, ' ', last_name)) AS Full_name
+FROM  employees
+WHERE last_name LIKE 'E%E';
 
 /*
 4. Find all employees hired in the 90s and born on Christmas.
@@ -25,16 +26,24 @@ SELECT first_name, last_name, DATEDIFF(NOW(), hire_date) AS Days_working_at_Comp
 FROM employees
 WHERE birth_date LIKE '%-12-25' 
 	AND hire_date LIKE '199%';
+
+
+--IF YOU WANT YEARS YOU CAN USE THIS
+DATEDIFF(NOW(), hire_date)/365
+
+
 /*
 5.Find the smallest and largest current salary from the salaries table.
 */
 
 SELECT MAX(salary)
-FROM salaries;
+FROM salaries
+WHERE to_date LIKE '9999%';
 -- Max salary = 158220
 
 SELECT MIN(salary)
-FROM salaries;
+FROM salaries
+WHERE to_date LIKE '9999%';
 -- MIN salary = 38623
 
 
@@ -62,6 +71,6 @@ Use your knowledge of built in SQL functions to generate a username for all of t
 
 SELECT LOWER(
 CONCAT(
-(SUBSTR(first_name, 1, 1)), SUBSTR(last_name, 1, 4),'_', SUBSTR(birth_date, 6, 2), SUBSTR(birth_date, 3, 2))),
+(SUBSTR(first_name, 1, 1)), SUBSTR(last_name, 1, 4),'_', SUBSTR(birth_date, 6, 2), SUBSTR(birth_date, 3, 2))) AS Username,
 first_name, last_name, birth_date
 FROM employees;
