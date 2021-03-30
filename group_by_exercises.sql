@@ -9,6 +9,7 @@ FROM titles;
 -- 7 titles --
 
 
+
 /*
 3. Write a query to to find a list of all unique last names of all employees that start and end with 'E' using GROUP BY.
 */
@@ -17,8 +18,13 @@ SELECT last_name
 FROM employees
 WHERE last_name LIKE 'e%e'
 GROUP BY last_name;
---5 unique last names
-
+/*5 unique last names
+Eldridge
+Erbe
+Erde
+Erie
+Etalle
+*/
 /*
 4. Write a query to to find all unique combinations of first and last names of all employees
  whose last names start and end with 'E'.
