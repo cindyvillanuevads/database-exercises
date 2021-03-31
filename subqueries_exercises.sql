@@ -3,6 +3,7 @@
 
 /*
 1. Find all the current employees with the same hire date as employee 101010 using a sub-query
+** 55 records
 */
 
 --  hire date of employee 101010     
@@ -35,8 +36,14 @@ AND  hire_date = '1990-10-22';
 
 /*
 2. Find all the titles ever held by all current employees with the first name Aamod.
-*/
 
+Assistant Engineer
+Engineer
+Senior Engineer
+Senior Staff
+Staff
+Technique Leader
+*/
 --  current employees
 SELECT emp_no, to_date
 FROM titles
@@ -57,14 +64,7 @@ WHERE emp_no IN(
 )
 AND to_date > now()
 GROUP BY title;
-/*
-Assistant Engineer
-Engineer
-Senior Engineer
-Senior Staff
-Staff
-Technique Leader
-/*
+
 
 /*
 3.How many people in the employees table are no longer working for the company? 85108
@@ -86,6 +86,11 @@ WHERE emp_no IN (
 --  85108
 /*
 4. Find all the current department managers that are female. List their names in a comment in your code.
+
+Isamu	Legleitner
+Karsten	Sigstam
+Leon	DasSarma
+Hilary	Kambil
 */
 
 -- current managers
@@ -106,12 +111,7 @@ WHERE emp_no IN (
 WHERE to_date > now()
 )
 AND gender =  'F';
-/*
-Isamu	Legleitner
-Karsten	Sigstam
-Leon	DasSarma
-Hilary	Kambil
-/*
+
 
 /*
 5. Find all the employees who currently have a higher salary than the companies overall,
@@ -153,6 +153,11 @@ How many current salaries are within 1 standard deviation of the current highest
  *******         BONUS    ******* 
 
 ***** Find all the department names that currently have female managers.
+
+Development
+Finance
+Human Resources
+Research
 */
 
 -- current managers
@@ -189,8 +194,8 @@ WHERE dept_no IN (
 		WHERE gender =  'F'		
 	)
 	AND  to_date > now()
-
 );
+
 /*
 **** Find the first and last name of the employee with the highest salary.
 43624	Tokuyasu	Pesch
@@ -223,7 +228,8 @@ WHERE emp_no IN (
 );
 
 /*
-Find the department name that the employee with the highest salary works in.
+Find the department name that the employee with the highest salary works in.  
+** Sales
 */
 
 -- highest salary
