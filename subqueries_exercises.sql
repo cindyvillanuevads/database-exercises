@@ -115,7 +115,7 @@ AND gender =  'F';
 
 /*
 5. Find all the employees who currently have a higher salary than the companies overall,
- historical average salary.  154,543
+ historical average salary.  154,543 employees
 */
 -- average 
 
