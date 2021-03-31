@@ -117,13 +117,16 @@ GROUP BY dept_no;
 Hint: Use current not historic information.
 */
 
-SELECT dept_name, AVG (salary)
+SELECT dept_name, AVG (salary) AS average_salary
 FROM departments
 JOIN dept_emp USING (dept_no)
-JOIN salaries USING (emp_no)
-WHERE salaries.to_date LIKE '9999%'
+JOIN salaries USING (emp_no) 
+WHERE dept_emp.to_date > now()  AND salaries.to_date > now() 
 GROUP BY dept_name
-ORDER BY AVG (salary) DESC;
+ORDER BY AVG (salary) DESC
+LIMIT  1;
+
+
 
 -- 8.  Who is the highest paid employee in the Marketing department?
 SELECT first_name, last_name, salary
@@ -147,9 +150,20 @@ LIMIT 1
 --10.  Bonus Find the names of all current employees, their department name,
 -- and their current manager's name.
 
+SELECT   CONCAT(emp.first_name, ' ', emp.last_name) AS 'Employee_Name', 
+departments.dept_name AS "Department Name",
+CONCAT(mn.first_name,' ', mn.last_name) AS "Employee Manager"
+FROM employees AS emp
+JOIN dept_emp AS dep ON emp.emp_no = dep.emp_no
+	AND dep.to_date > now()  	
+JOIN departments ON dep.dept_no = departments.dept_no
+JOIN dept_manager AS man ON man.dept_no = departments.dept_no
+AND man.to_date > now()	
+JOIN employees AS mn ON mn.emp_no = man.emp_no
+ORDER BY departments.dept_name, emp.emp_no ;
 
 
---11. 
+--11. Bonus Who is the highest paid employee within each department.
 
 SELECT  C.first_name, C.last_name,  salary, dept_name
 FROM departments AS A
