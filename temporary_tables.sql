@@ -22,9 +22,15 @@ Add a column named full_name to this table. It should be a VARCHAR
 whose length is the sum of the lengths of the first name and last name columns
 Update the table so that full name column contains the correct data
 Remove the first_name and last_name columns from the table.
-
 */
 -- Add a column named full_name to this table.
+--calculate the length
+SELECT (sum(length(first_name)) + Sum(length(last_name))) AS total_length
+FROM employees_with_departments; 
+
+-- or
+SELECT MAX(((length(first_name)) + (length(last_name))))
+FROM employees_with_departments;
 
 ALTER TABLE employees_with_departments
 ADD full_name VARCHAR(30);
@@ -61,3 +67,77 @@ ALTER TABLE sakila_payment  CHANGE amount amount2 DECIMAL(6,2);
 UPDATE sakila_payment SET amount2 = amount2*100;
 
 ALTER TABLE sakila_payment  CHANGE amount2 amount INT(6);
+
+/*
+Find out how the current average pay in each department compares to the overall, historical average pay.
+ In order to make the comparison easier, you should use the Z-score for salaries. In terms of salary, 
+ what is the best department right now to work for? The worst?
+*/
+
+-- current salaries
+SELECT * 
+FROM employees.salaries
+WHERE employees.salaries.to_date > now();
+
+--list of current salaries for each employee with department
+SELECT   employees.departments.dept_name, employees.salaries.salary   
+FROM employees.salaries 
+JOIN employees.dept_emp USING (emp_no)
+JOIN employees.departments USING (dept_no)
+WHERE employees.salaries.to_date > now();
+
+-- list avg salaries in each  deparments
+
+
+SELECT  employees.departments.dept_name, 
+AVG(employees.salaries.salary) AS avg_salary,
+STDDEV(employees.salaries.salary) AS standard_deviation    
+FROM employees.salaries 
+JOIN employees.dept_emp USING (emp_no)
+JOIN employees.departments USING (dept_no)
+WHERE employees.salaries.to_date > now()
+GROUP BY employees.departments.dept_name
+ORDER BY avg_salary DESC;
+
+-- list historical avg salaries in each deparments
+SELECT  employees.departments.dept_name,
+AVG(employees.salaries.salary) AS hist_avg_salary,
+STDDEV(employees.salaries.salary) AS standard_deviation  
+FROM employees.salaries 
+JOIN employees.dept_emp USING (emp_no)
+JOIN employees.departments USING (dept_no)
+GROUP BY employees.departments.dept_name
+ORDER BY hist_avg_salary DESC;
+
+-- I create a remporary table for  current avg salaries and for historical average salaries.
+CREATE TEMPORARY TABLE current_avg_salary AS(
+	SELECT  employees.departments.dept_name, 
+	AVG(employees.salaries.salary) AS avg_salary   
+	FROM employees.salaries 
+	JOIN employees.dept_emp USING (emp_no)
+	JOIN employees.departments USING (dept_no)
+	WHERE employees.salaries.to_date > now()
+	GROUP BY employees.departments.dept_name
+	ORDER BY avg_salary DESC
+);
+
+
+CREATE TEMPORARY TABLE historical_salary AS(
+SELECT  employees.departments.dept_name,
+AVG(employees.salaries.salary) AS hist_avg_salary,
+STDDEV(employees.salaries.salary) AS standard_deviation  
+FROM employees.salaries 
+JOIN employees.dept_emp USING (emp_no)
+JOIN employees.departments USING (dept_no)
+GROUP BY employees.departments.dept_name
+ORDER BY hist_avg_salary DESC
+);
+
+
+-- I calculate de Z score
+
+
+SELECT *, ((avg_salary - hist_avg_salary)/ standard_deviation) AS Z_score
+FROM current_avg_salary
+JOIN historical_salary USING( dept_name)
+ORDER BY Z_score DESC;
