@@ -1,7 +1,11 @@
 --            *******  Temporary Tables  ******* 
-/*
+
+
+/* 
+*********************************************************************************************
 1. 
 Using the example from the lesson, re-create the employees_with_departments table.
+********************************************************************************************* 
 */
 -- First I did a join to combine employees and departments table.
 SELECT employees.employees.first_name, employees.employees.last_name, employees.departments.dept_name
@@ -51,8 +55,10 @@ CREATE TEMPORARY TABLE employees_with_departments AS(
 );
 
 /*
+*********************************************************************************************
 2
 Create a temporary table based on the payment table from the sakila database.
+*********************************************************************************************
 */
 CREATE TEMPORARY TABLE sakila_payment AS(
 SELECT *
@@ -67,7 +73,7 @@ UPDATE sakila_payment SET amount2 = amount2*100;
 
 ALTER TABLE sakila_payment  CHANGE amount2 amount_in_pennies INT(6);
 
--- other way to do it if when we create the table we multiply by 100 the amount
+-- other way to do it if when we create the table we multiply  the amount by 100
 create temporary table payments as (
     select payment_id, customer_id, staff_id, rental_id, amount * 100 as amount_in_pennies, payment_date, last_update
     from sakila.payment
@@ -76,10 +82,13 @@ create temporary table payments as (
 ALTER TABLE payments MODIFY amount_in_pennies int NOT NULL
 
 /*
+*********************************************************************************************
+3.
 Find out how the current average pay in each department compares to the overall, historical average pay.
  In order to make the comparison easier, you should use the Z-score for salaries. In terms of salary, 
  what is the best department right now to work for? The worst?
  best
+ *********************************************************************************************
 Sales	Z score=	1.48136523
 
  worst
@@ -120,7 +129,7 @@ AVG(employees.salaries.salary) AS hist_avg_salary,
 STDDEV(employees.salaries.salary) AS standard_deviation  
 FROM employees.salaries 
 
--- I create a temporary table for  current avg salaries.
+-- I create a temporary table for  current_avg_salary.
 CREATE TEMPORARY TABLE current_avg_salary AS(
 	SELECT  employees.departments.dept_name, 
     AVG(employees.salaries.salary) AS avg_salary   
@@ -147,9 +156,10 @@ SELECT *, ((avg_salary - hist_avg_salary)/ standard_deviation) AS Z_score
 FROM current_avg_salary
 JOIN historical_salary USING( dept_name)
 ORDER BY Z_score DESC;
--- ***********************************************
--- ***  other way to do it as we seen in class ***
--- ***********************************************
+-- ---------------------------------------------------------------------------------------------------
+-- *****************************************************
+-- *** other way to do it. it was explained in class ***
+-- *****************************************************
 -- Exercise 3 in a more programmatic way
 -- Historic average and standard deviation b/c the problem says "use historic average"
 -- 63,810 historic average salary
