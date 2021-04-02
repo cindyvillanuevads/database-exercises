@@ -7,7 +7,7 @@
 */
 
 --  hire date of employee 101010     
-SELECT *
+SELECT hire_date
 FROM employees
 WHERE emp_no = 101010; 
 
@@ -21,18 +21,44 @@ WHERE to_date > now();
 
 SELECT emp_no, first_name, last_name 
 FROM employees
-WHERE hire_date = '1990-10-22'; 
+WHERE hire_date = (
+	SELECT hire_date
+	FROM employees
+	WHERE emp_no = 101010);
       
--- combine
+-- combine all three 
 
 SELECT emp_no, first_name, last_name, hire_date 
 FROM employees
 WHERE emp_no IN(
-SELECT emp_no
-FROM dept_emp
-WHERE to_date > now()  
+	SELECT emp_no
+	FROM dept_emp
+	WHERE to_date > now()  
 )
-AND  hire_date = '1990-10-22';    
+AND  hire_date = (
+					SELECT hire_date
+					FROM employees
+					WHERE emp_no = 101010);  
+
+
+/*
+*********************************************************************************
+                          other way to do it using a join
+*********************************************************************************
+*/
+SELECT
+	first_name,
+	last_name,
+	hire_date
+FROM employees
+JOIN salaries USING(emp_no)
+WHERE to_date > CURDATE()
+	AND hire_date = (
+					SELECT hire_date
+					FROM employees
+					WHERE emp_no = 101010);
+
+
 
 /*
 2. Find all the titles ever held by all current employees with the first name Aamod.
@@ -44,7 +70,7 @@ Senior Staff
 Staff
 Technique Leader
 */
---  current employees
+--  current employees, titles and salary tables have 240, 124 current employees
 SELECT emp_no, to_date
 FROM titles
 WHERE to_date > now();   
@@ -67,15 +93,16 @@ GROUP BY title;
 
 
 /*
-3.How many people in the employees table are no longer working for the company? 85108
+3.How many people in the employees table are no longer working for the company? 59,900
  Give the answer in a comment in your code.
 */
 
--- current employees
-SELECT emp_no, to_date
+-- current employees  240,124
+SELECT  (emp_no)
 FROM dept_emp
-WHERE to_date < NOW();
+WHERE to_date > NOW();
 
+-- NOW WE USE the cuurent empoyees that are not in the employees table.
 SELECT COUNT(*) AS "former employees"
 FROM employees
 WHERE emp_no IN (
@@ -83,7 +110,7 @@ WHERE emp_no IN (
 	FROM dept_emp
 	WHERE to_date < NOW()
 );
---  85108
+--  59,900
 /*
 4. Find all the current department managers that are female. List their names in a comment in your code.
 
@@ -117,12 +144,13 @@ AND gender =  'F';
 5. Find all the employees who currently have a higher salary than the companies overall,
  historical average salary.  154,543 employees
 */
--- average 
+-- historical average 
 
 SELECT AVG (salary)
 FROM salaries; 
 
--- higher salary employees list with the query above 
+-- higher salary emp_no list > average salary (we are using the code for historical average salary ) 
+
 SELECT emp_no
 FROM salaries
 WHERE salary > (
@@ -130,7 +158,7 @@ WHERE salary > (
 	FROM salaries)
 AND to_date > now();
 
---combine the 2 
+--now we use employees table to  get the list of emp_no, first_name, last_name whit the condition  above. 
 SELECT emp_no, first_name, last_name
 FROM employees
 WHERE emp_no IN (
@@ -143,12 +171,47 @@ WHERE emp_no IN (
 );
 /*
 6.
-How many current salaries are within 1 standard deviation of the current highest salary?
+How many current salaries are within 1 standard deviation of the current highest salary? (83 salaries)
 (Hint: you can use a built in function to calculate the standard deviation.)
  What percentage of all salaries is this?
  */
 
+ -- first.  I calculate the current standar deviation and highest salary
+-- Highest current salary =158220
+-- current standard deviation.=	17309.95933634675
 
+-- second, I calculate current salaries are within 1 standard deviation of the current highest salary. (83 salaries)
+SELECT Count(*)
+FROM salaries
+WHERE salary >= (
+	SELECT (max(salary)- STDDEV(salary) )
+	FROM salaries
+	WHERE to_date > now()
+)
+AND  to_date > now();
+
+-- I calculate the total current  salaries (240,124)
+SELECT Count(*)
+FROM salaries
+where  to_date > now();
+-- finally, I calculate 83 * 100 / 240124
+SELECT (
+	SELECT Count(*)
+	FROM salaries
+	WHERE salary >= (
+		SELECT (max(salary)- STDDEV(salary) )
+		FROM salaries
+		WHERE to_date > now()
+	)
+	AND  to_date > now()
+) *100 /
+(SELECT Count(*)
+FROM salaries
+WHERE  to_date > now()) AS "Percent of Salaries";
+
+
+-- Now I can get the percentage of all salaries that are within 1 standard deviation of the current highest salary
+-- 
 /*
  *******         BONUS    ******* 
 
@@ -180,7 +243,7 @@ WHERE emp_no IN (
 )
 AND  to_date > now();
 
--- combine everythin to get the department names
+-- combine everything to get the department names
 
 
 SELECT dept_no, dept_name
