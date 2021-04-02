@@ -80,7 +80,7 @@ SELECT emp_no, first_name
 FROM employees
 WHERE first_name = 'Aamod';
 
-
+-- combine all and group by title
 SELECT title
 FROM titles
 WHERE emp_no IN(
@@ -102,7 +102,7 @@ SELECT  (emp_no)
 FROM dept_emp
 WHERE to_date > NOW();
 
--- NOW WE USE the cuurent empoyees that are not in the employees table.
+-- NOW WE USE the current empoyees that are not in the employees table.
 SELECT COUNT(*) AS "former employees"
 FROM employees
 WHERE emp_no IN (
@@ -179,6 +179,9 @@ How many current salaries are within 1 standard deviation of the current highest
  -- first.  I calculate the current standar deviation and highest salary
 -- Highest current salary =158220
 -- current standard deviation.=	17309.95933634675
+
+SELECT max(salary), STDDEV(salary) 
+FROM salaries;
 
 -- second, I calculate current salaries are within 1 standard deviation of the current highest salary. (83 salaries)
 SELECT Count(*)
