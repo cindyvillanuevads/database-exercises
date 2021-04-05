@@ -8,7 +8,7 @@ and a new column 'is_current_employee' that is a 1 if the employee is still with
  select *
  FROM employees.dept_emp
 
--- in this table we have more duplicated emp_no, so we can get a list of all employees with the latest to_date
+-- in this table we have  duplicated emp_no, so we can get a list of all employees with the latest to_date
 -- we get a list of all employees with the latest end date ( to_date) (300024 records)
 SELECT dept_emp.emp_no, dept_emp.dept_no, max(dept_emp.to_date)
 FROM employees.dept_emp
@@ -22,7 +22,7 @@ FROM employees.dept_emp
 GROUP BY dept_emp.emp_no);
 
 
--- in order to get  department number and  start date (this is the start date  when the employee start work in a department)
+-- in order to get  department number and  start date (this is the start date  when the employee starts working  in a department)
 -- I will join all_employees table with dept_emp
 -- NOTE this table will have the latest department where an employee is/was working. 
 SELECT de.emp_no, de.dept_no, de.from_date, de.to_date
@@ -45,14 +45,20 @@ SELECT de.emp_no, de.dept_no, b.hire_date, de.to_date,
 FROM employees.dept_emp AS de
 JOIN all_employees ON de.emp_no = all_employees.emp_no AND de.to_date = all_employees.end_date
 JOIN employees.employees AS b ON b.emp_no = all_employees.emp_no;
+-- *************** OTHER WAY  USING group_concat for dept_no ************************
+select emp_no, group_concat(dept_no, ' ') as department_nums , min(from_date) as from_date , max(to_date) as to_date,
+max(if(to_date = '9999-01-01', true, false )) as is_current_employment
+from dept_emp
+group by emp_no;
 
+-- _______________________________________________________________________________________________________________________
 /*
 2. Write a query that returns all employee names (previous and current), and a new column 'alpha_group' that returns 'A-H', 
 'I-Q', or 'R-Z' depending on the first letter of their last name.
  */
 
 
---   using epmloyees table
+--   using employees table
 SELECT first_name,
 CASE 
  	WHEN SUBSTRING(employees.employees.first_name, 1, 1) <'I' THEN 'A-H'
@@ -62,22 +68,21 @@ CASE
 FROM employees;
 
 
-
+-- ____________________________________________________________________________________________________________
 /*
-How many employees (current or previous) were born in each decade?
+3. How many employees (current or previous) were born in each decade?
  */
-SELECT count(*) AS no_employees,
+SELECT 
 	CASE
-		WHEN birth_date LIKE '194%' THEN "40's"
 		WHEN birth_date LIKE '195%' THEN "50's"
 		WHEN birth_date LIKE '196%' THEN "60's"
-		WHEN birth_date LIKE '194%' THEN "70's"
-		ELSE 'youngest'
-		END AS  decade
+		ELSE 'other'
+		END AS  born_decade,
+		count(*) AS no_employees
 FROM employees
-GROUP BY decade;
+GROUP BY born_decade;
 
--- #### BONUS ##
+-- ######################## BONUS  ########################
 /*
 What is the current average salary for each of the following department groups: R&D, Sales & Marketing, Prod & QM, Finance & HR, Customer Service?
 
