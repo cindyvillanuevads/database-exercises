@@ -82,6 +82,8 @@ SELECT
 FROM employees
 GROUP BY born_decade;
 
+
+-- ________________________________________________________________________________________________________________
 -- ######################## BONUS  ########################
 /*
 What is the current average salary for each of the following department groups: R&D, Sales & Marketing, Prod & QM, Finance & HR, Customer Service?
@@ -96,3 +98,59 @@ What is the current average salary for each of the following department groups: 
 | R&D               |                 |
 +-------------------+-----------------+
  */
+-- FIRST. I check the tables that I need :
+--  salaries (I get the current salaries using to_date > now() and emp_no),
+--  dept_emp (I can get current emp_no and dept_no using to_date > now())
+-- dept_name ( I can get emp_no and dept_name)
+
+-- SECOND. I combine the  3 tables using a join  ( current employees = 240, 124 )
+
+SELECT  emp_no, dept_no, dept_name, salary
+FROM salaries AS sa
+JOIN dept_emp AS de USING (emp_no)
+JOIN  departments USING (dept_no)
+WHERE sa.to_date > now() AND de.to_date > now();
+
+-- THIRD. I reorder the deparmens as dept_group
+
+SELECT emp_no, dept_no, dept_name, salary,
+	CASE 
+		WHEN dept_name = 'Finance' THEN 'Finance & HR'
+		WHEN dept_name = 'Human Resources' THEN 'Finance & HR'
+		WHEN dept_name = 'Sales' THEN 'Sales & Marketing '
+		WHEN dept_name = 'Marketing' THEN 'Sales & Marketing'
+		WHEN dept_name = 'Production' THEN 'Prod & QM'
+		WHEN dept_name = 'Quality Management' THEN 'Prod & QM'
+		WHEN dept_name = 'Research' THEN ' R&D '
+		WHEN dept_name = 'Development' THEN ' R&D '
+		WHEN dept_name = 'Development' THEN ' R&D '
+		ELSE 'Customer Service '
+		END AS  dept_group
+FROM salaries AS sa
+JOIN dept_emp AS de USING (emp_no)
+JOIN  departments USING (dept_no)
+WHERE sa.to_date > now() AND de.to_date > now();
+
+-- FOURTH. I calculate the average by dept_group. I use group by dept_group
+
+
+ SELECT  
+	CASE 
+		WHEN dept_name = 'Finance' THEN 'Finance & HR'
+		WHEN dept_name = 'Human Resources' THEN 'Finance & HR'
+		WHEN dept_name = 'Sales' THEN 'Sales & Marketing '
+		WHEN dept_name = 'Marketing' THEN 'Sales & Marketing'
+		WHEN dept_name = 'Production' THEN 'Prod & QM'
+		WHEN dept_name = 'Quality Management' THEN 'Prod & QM'
+		WHEN dept_name = 'Research' THEN ' R&D '
+		WHEN dept_name = 'Development' THEN ' R&D '
+		WHEN dept_name = 'Development' THEN ' R&D '
+		ELSE 'Customer Service '
+		END AS  dept_group,
+		 AVG(salary) AS current_average_salary
+FROM salaries AS sa
+JOIN dept_emp AS de USING (emp_no)
+JOIN  departments USING (dept_no)
+WHERE sa.to_date > now() AND de.to_date > now()
+GROUP BY dept_group
+ORDER BY current_average_salary;
