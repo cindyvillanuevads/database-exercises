@@ -101,7 +101,7 @@ What is the current average salary for each of the following department groups: 
 -- FIRST. I check the tables that I need :
 --  salaries (I get the current salaries using to_date > now() and emp_no),
 --  dept_emp (I can get current emp_no and dept_no using to_date > now())
--- dept_name ( I can get emp_no and dept_name)
+-- dept_name ( I can get dept_no and dept_name)
 
 -- SECOND. I combine the  3 tables using a join  ( current employees = 240, 124 )
 
@@ -131,7 +131,7 @@ JOIN dept_emp AS de USING (emp_no)
 JOIN  departments USING (dept_no)
 WHERE sa.to_date > now() AND de.to_date > now();
 
--- FOURTH. I calculate the average by dept_group. I use group by dept_group
+-- FOURTH. I calculate the average salary by dept_group. I use group by dept_group
 
 
  SELECT  
