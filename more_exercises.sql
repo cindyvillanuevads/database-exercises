@@ -133,5 +133,38 @@ GROUP BY continent
 ORDER BY life_expectancy;
 
 
+-- ***** BONUS **
+
+
+-- Find all the countries whose local name is different from the official name (135 records)
+
+SELECT NAME, localname
+FROM country
+WHERE NAME NOT LIKE localname;
+
+-- How many countries have a life expectancy less than China?
+SELECT count(*)
+FROM country
+WHERE lifeexpectancy < (
+	SELECT lifeexpectancy
+	FROM country
+	WHERE NAME= 'China')
+ORDER BY NAME;
+
+-- What state is Monterrey located in?
+SELECT NAME, district, countrycode
+FROM city
+WHERE NAME = 'Monterrey';
+
+-- What region of the world is city Monterrey located in?
+SELECT ci.name, ci.district, co.name, co.region
+FROM city AS ci
+JOIN country AS co ON ci.countrycode = co.code
+WHERE ci.name = 'Amsterdam';
+
+
+
+
+
 
 
