@@ -60,3 +60,78 @@ JOIN (
 	WHERE sa.to_date > now() AND de.to_date > now()
 	GROUP BY dept_no
 	) AS department_avg USING (dept_no);
+
+-- ______________________________________________________________________________________________________________________________________________________________
+ 
+ -- *******************************************          WORLD DATABASE          *******************************************  
+
+ 
+/*
+** What languages are spoken in Santa Monica?
+
+
++------------+------------+
+| Language   | Percentage |
++------------+------------+
+| Portuguese |        0.2 |
+| Vietnamese |        0.2 |
+| Japanese   |        0.2 |
+| Korean     |        0.3 |
+| Polish     |        0.3 |
+| Tagalog    |        0.4 |
+| Chinese    |        0.6 |
+| Italian    |        0.6 |
+| French     |        0.7 |
+| German     |        0.7 |
+| Spanish    |        7.5 |
+| English    |       86.2 |
++------------+------------+
+*/
+SELECT LANGUAGE, percentage
+FROM countrylanguage
+WHERE countrycode = 'USA'
+ORDER BY percentage;
+
+
+-- ** How many different countries are in each region?
+SELECT region, count(*) AS no_of_countries
+FROM country
+GROUP BY region
+ORDER BY no_of_countries;
+
+
+-- ** What is the population for each region?
+SELECT region, sum(population) AS Population
+FROM country
+GROUP BY region
+ORDER BY Population DESC;
+
+
+-- ** What is the population for each continent?
+SELECT continent, sum(population) AS Population
+FROM country
+GROUP BY continent
+ORDER BY Population DESC;
+
+
+-- ** What is the average life expectancy globally?
+SELECT AVG(lifeexpectancy)
+FROM country;
+
+-- ** What is the average life expectancy for each region, each continent? Sort the results from shortest to longest
+
+-- region
+SELECT  region, AVG(lifeexpectancy) AS life_expectancy
+FROM country
+GROUP BY region
+ORDER BY life_expectancy;
+
+-- Continent
+SELECT  continent, AVG(lifeexpectancy) AS life_expectancy
+FROM country
+GROUP BY continent
+ORDER BY life_expectancy;
+
+
+
+
