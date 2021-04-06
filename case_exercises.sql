@@ -10,9 +10,9 @@ and a new column 'is_current_employee' that is a 1 if the employee is still with
 
 -- in this table we have  duplicated emp_no, so we can get a list of all employees with the latest to_date
 -- we get a list of all employees with the latest end date ( to_date) (300024 records)
-SELECT dept_emp.emp_no, dept_emp.dept_no, max(dept_emp.to_date)
+SELECT dept_emp.emp_no,  max(dept_emp.to_date)
 FROM employees.dept_emp
-GROUP BY dept_emp.emp_no, dept_emp.dept_no;
+GROUP BY dept_emp.emp_no;
 
 
 -- i will create a temporary table for this
