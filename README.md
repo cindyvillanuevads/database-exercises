@@ -6,7 +6,7 @@
 
 **RDBMS** *Relational Database Management System*, is used to interact with a database. It serves as the interface between a user and a database allowing the user to employ SQL to interact with the database
 
-MySQL is a Relational Database Management System, RDBMS, used to interact with a database. It serves as the interface between a user and a database allowing the user to employ SQL to interact with the database.
+**MySQL** is a Relational Database Management System, RDBMS.
 
 ## Fundamental RDBMS Terms
 
